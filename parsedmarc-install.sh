@@ -6,9 +6,10 @@
 #                                                                   #
 # Email:        martin                                              #
 # Last Update:  2019-06-07                                          #
-# Version:      1.00                                                #
+# Version:      1.10                                                #
 #                                                                   #
-# Changes:      Initial Version                                     #
+# Changes:      Initial Version (1.00)                              #
+#               Added logging dir (1.10)                            #
 #                                                                   #
 # Description:  Installs parsedmarc as a service (paas :)           #
 # Info:         https://domainaware.github.io/parsedmarc/           #
@@ -27,7 +28,7 @@ echo "Configure parsedmarc";
     export DEBIAN_FRONTEND=noninteractive;
     id parsedmarc || (groupadd parsedmarc && useradd -g parsedmarc parsedmarc);
     mkdir /etc/parsedmarc/;
-    /bin/cp /elasticsearch/certs/elastic-root-ca /etc/parsedmarc/;
+    /bin/cp /elasticsearch/certs/root-ca /etc/parsedmarc/;
     mkdir /var/log/parsedmarc;
     chown parsedmarc:parsedmarc -R /var/log/parsedmarc/;
     echo "parsedmarc log-file" > /var/log/parsedmarc/parsedmarc.log;
@@ -90,6 +91,7 @@ WantedBy=multi-user.target
 EOF";
     sync;
     chown -R parsedmarc:parsedmarc /etc/parsedmarc;
+    chown -R parsedmarc:parsedmarc /var/log/parsedmarc;
     systemctl daemon-reload;
     systemctl enable parsedmarc.timer;
     systemctl enable parsedmarc.service;
