@@ -1,6 +1,0 @@
-curl -XPOST "https://localhost:9200/_security/user/parsedmarc" -H 'Content-Type: application/json' -d'
-{
-  "password" : "parsedmarc",
-  "roles" : [ "parsedmarc"],
-  "full_name" : "User for Ingesting DMARC information"
-}'
