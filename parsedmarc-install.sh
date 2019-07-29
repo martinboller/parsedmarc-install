@@ -5,12 +5,13 @@
 # Author:       Martin Boller                                       #
 #                                                                   #
 # Email:        martin                                              #
-# Last Update:  2019-06-17                                          #
-# Version:      1.20                                                #
+# Last Update:  2019-07-29                                          #
+# Version:      1.30                                                #
 #                                                                   #
 # Changes:      Initial Version (1.00)                              #
 #               Added logging dir (1.10)                            #
 #               Asking user for input on ini file (1.20)            #
+#               Installing version 4.6.2 (1.30)                     #
 #                                                                   #
 # Description:  Installs parsedmarc as a service (paas :)           #
 # Info:         https://domainaware.github.io/parsedmarc/           #
@@ -20,7 +21,8 @@
 install_parsedmarc() {
     echo "Install parsedmarc";
     sudo apt-get install -y python3-pip;
-    pip3 install -U parsedmarc;
+    # Currently 6.5.0 and newer doesn't work with some mailproviders
+    pip3 install -U parsedmarc==6.4.2;
     /usr/bin/logger 'install_parsedmarc()' -t 'parsedmarc';
 }
 
@@ -29,7 +31,8 @@ echo "Configure parsedmarc";
     export DEBIAN_FRONTEND=noninteractive;
     id parsedmarc || (groupadd parsedmarc && useradd -g parsedmarc parsedmarc);
     mkdir /etc/parsedmarc/;
-    /bin/cp /etc/elasticsearch/certs/bsiem-root-ca.crt /etc/parsedmarc/;
+    # Replace root-ca name/location if not already trusted
+    /bin/cp /etc/elasticsearch/certs/root-ca.crt /etc/parsedmarc/;
     mkdir /var/log/parsedmarc;
     chown parsedmarc:parsedmarc -R /etc/parsedmarc;
     chown parsedmarc:parsedmarc -R /var/log/parsedmarc/;
@@ -37,11 +40,16 @@ echo "Configure parsedmarc";
     # Create configuration for parsedmarc
     # obtain information from user
     read -p "Enter nameserver to use for parsedmarc: "  name_server;
+    echo -e;
     read -p "Enter IMAP server to use for parsedmarc: "  imap_server;
+    echo -e;
     read -p "Enter IMAP username to use for parsedmarc: "  email_address;
+    echo -e;
     read -s -p "Enter IMAP users password to use for parsedmarc: "  email_password;
-    # Going to assume that user for Elasticsearch is parsedmarc
+    echo -e;
+    # Assuming Elasticsearch user is named parsedmarc
     read -s -p "Enter parsedmarc users password to use for accessing elasticsearch: "  parsedmarc_password;
+    echo -e;
         
     # Create config file
     sudo sh -c "cat << EOF  >  /etc/parsedmarc/parsedmarc.ini
@@ -52,6 +60,7 @@ save_aggregate = True
 save_forensic = True
 nameservers = $name_server
 log_file = /var/log/parsedmarc/parsedmarc.log
+#debug: True
 
 [imap]
 host = $imap_server
@@ -60,12 +69,12 @@ password = $email_password
 watch = False
 reports_folder = Inbox.DMARC
 archive_folder = Inbox.Archive
-#skip_certificate_verification = True
 
 [elasticsearch]
 hosts = https://parsedmarc:$parsedmarc_password@localhost:9200
 ssl = True
-cert_path = /etc/parsedmarc/bsiem-root-ca.crt
+cert_path = /etc/parsedmarc/root-ca.crt
+monthly_indexes: True
 EOF";
 
     # Create  Service
@@ -100,7 +109,7 @@ Unit=parsedmarc.service
 WantedBy=multi-user.target
 EOF";
     sync;
-    /bin/cp /etc/elasticsearch/certs/ca/bsiem-root-ca.crt /etc/parsedmarc/;
+    /bin/cp /etc/elasticsearch/certs/ca/root-ca.crt /etc/parsedmarc/;
     chown -R parsedmarc:parsedmarc /etc/parsedmarc;
     chown -R parsedmarc:parsedmarc /var/log/parsedmarc;
     systemctl daemon-reload;
