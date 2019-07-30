@@ -21,8 +21,8 @@
 install_parsedmarc() {
     echo "Install parsedmarc";
     sudo apt-get install -y python3-pip;
-    # Currently 6.5.0 and newer doesn't work with some mailproviders
-    pip3 install -U parsedmarc==6.4.2;
+    # Currently 6.5.2 works while 6.5.0 and 6.5.1 does not (6.4.2 also works)
+    pip3 install -U parsedmarc;
     /usr/bin/logger 'install_parsedmarc()' -t 'parsedmarc';
 }
 
@@ -67,8 +67,8 @@ host = $imap_server
 user = $email_address
 password = $email_password
 watch = False
-reports_folder = Inbox.DMARC
-archive_folder = Inbox.Archive
+reports_folder = DMARC
+archive_folder = DMARC-Archive
 
 [elasticsearch]
 hosts = https://parsedmarc:$parsedmarc_password@localhost:9200
