@@ -5,13 +5,14 @@
 # Author:       Martin Boller                                       #
 #                                                                   #
 # Email:        martin                                              #
-# Last Update:  2019-07-29                                          #
-# Version:      1.30                                                #
+# Last Update:  2019-08-11                                          #
+# Version:      1.40                                                #
 #                                                                   #
 # Changes:      Initial Version (1.00)                              #
 #               Added logging dir (1.10)                            #
 #               Asking user for input on ini file (1.20)            #
 #               Installing version 4.6.2 (1.30)                     #
+#               Installing parsedmarc 6.5.3 (1.40)                  #
 #                                                                   #
 # Description:  Installs parsedmarc as a service (paas :)           #
 # Info:         https://domainaware.github.io/parsedmarc/           #
@@ -21,8 +22,8 @@
 install_parsedmarc() {
     echo "Install parsedmarc";
     sudo apt-get install -y python3-pip;
-    # Currently 6.5.2 works while 6.5.0 and 6.5.1 does not (6.4.2 also works)
-    pip3 install -U parsedmarc;
+    # Currently 6.5.2 and 6.5.3 have been tested to work while 6.5.0 and 6.5.1 does not (6.4.2 also works)
+    pip3 install -U parsedmarc==6.5.3;
     /usr/bin/logger 'install_parsedmarc()' -t 'parsedmarc';
 }
 
@@ -67,7 +68,8 @@ host = $imap_server
 user = $email_address
 password = $email_password
 watch = False
-reports_folder = DMARC
+# Default Reports Folder is Inbox
+#reports_folder = DMARC
 archive_folder = DMARC-Archive
 
 [elasticsearch]
