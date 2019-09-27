@@ -5,14 +5,15 @@
 # Author:       Martin Boller                                       #
 #                                                                   #
 # Email:        martin                                              #
-# Last Update:  2019-08-11                                          #
-# Version:      1.40                                                #
+# Last Update:  2019-09-27                                          #
+# Version:      1.41                                                #
 #                                                                   #
 # Changes:      Initial Version (1.00)                              #
 #               Added logging dir (1.10)                            #
 #               Asking user for input on ini file (1.20)            #
 #               Installing version 4.6.2 (1.30)                     #
 #               Installing parsedmarc 6.5.3 (1.40)                  #
+#               Tested with parsedmarc=6.6.1
 #                                                                   #
 # Description:  Installs parsedmarc as a service (paas :)           #
 # Info:         https://domainaware.github.io/parsedmarc/           #
@@ -22,8 +23,8 @@
 install_parsedmarc() {
     echo "Install parsedmarc";
     sudo apt-get install -y python3-pip;
-    # Currently 6.5.2 and 6.5.3 have been tested to work while 6.5.0 and 6.5.1 does not (6.4.2 also works)
-    pip3 install -U parsedmarc==6.5.3;
+    # Currently newer versions have been tested to work while 6.5.0 and 6.5.1 does not (6.4.2 and earlier also works)
+    pip3 install -U parsedmarc;
     /usr/bin/logger 'install_parsedmarc()' -t 'parsedmarc';
 }
 
