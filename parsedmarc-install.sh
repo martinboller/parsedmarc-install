@@ -5,8 +5,8 @@
 # Author:       Martin Boller                                       #
 #                                                                   #
 # Email:        martin                                              #
-# Last Update:  2019-09-27                                          #
-# Version:      1.42                                                #
+# Last Update:  2021-01-12                                          #
+# Version:      1.45                                                #
 #                                                                   #
 # Changes:      Initial Version (1.00)                              #
 #               Added logging dir (1.10)                            #
@@ -14,6 +14,7 @@
 #               Installing version 4.6.2 (1.30)                     #
 #               Installing parsedmarc 6.5.3 (1.40)                  #
 #               Tested with parsedmarc=6.7.2 (1.42)                 #
+#               Tested with parsedmarc=6.12.0 (1.45)                #
 #                                                                   #
 # Description:  Installs parsedmarc as a service (paas :)           #
 # Info:         https://domainaware.github.io/parsedmarc/           #
